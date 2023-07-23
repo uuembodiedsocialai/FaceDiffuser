@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="FaceDiffusion produces facial animation for 3D characters based on speech">
+  <meta name="keywords" content="FaceDiffusion, Diffusion, Animation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FaceDiffusion: Speech-Driven Facial Animation Synthesis Using Diffusion Models</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">FaceDiffusion</h1> 
+          <h2 class="title is-3 publication-title">Speech-Driven Facial Animation Synthesis Using Diffusion Models </h2>
+          <div class="is-size-3 publication-authors">
+            <span class="author-block"> <a href="https://www.linkedin.com/in/stefan-stan-824088159/"> Ștefan Stan </a>, </span>
+            <span class="author-block"> <a href="https://www.uu.nl/staff/KIHaque"> Kazi Injamamul Haque </a>, </span>
+            <span class="author-block"> <a href="https://www.uu.nl/staff/ZYumak"> Zerrin Yumak </a> </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Utrecht University</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/uuembodiedsocialai/FaceDiffuser"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+
+              <!-- Demo Link. -->
+              <span class="link-block">
+                <a href="https://replicate.com/stefan-st/face-diff" target="_blank"
+                class="external-link button is-normal is-rounded is-dark">
+                <span class="icon">
+                  <i class="fas fa-rocket"></i>
+                </span>
+                <span>Demo</span>
+              </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Speech-driven facial animation synthesis has been a notable area of research in recent years, with new state-of-the-art approaches constantly emerging. Deep-learning techniques have demonstrated remarkable results for this task, clearly outperforming procedural methods.
+            However, we notice a relevant scarcity of methods for generating rigged character facial animations that could be seamlessly integrated into animation pipelines. There is also a lack of non-deterministic methods that can produce a high variety of animations.
+            In this paper, we present FaceDiffuser, a deep-learning model able to generate expressive and diverse facial animation sequences based on speech audio input. To the best of our knowledge, we are the first to employ the diffusion mechanism for the task of 3D facial animation synthesis, leveraging their non-deterministic nature for a better and more expressive facial animation generation.
+            We use a pre-trained large speech representation model, HuBERT, to extract speech features, as it has proven to be effective even in noisy audio cases, making our model more robust to noisy settings.
+            We show that our model is robust to noisy audio and can be used to animate 3D vertex facial meshes as well as rigged characters.
+          </p>
+          <p>
+            We utilise 4D facial scan datasets as well as datasets containing rigged character animations, such as our in-house dataset UUDaMM, along with the recently released BEAT blendshape-based dataset.
+            The results are assessed using both subjective and objective metrics in comparison to state-of-the-art results as well as the ground truth data.
+            We show that our model performs objectively better than state-of-the-art techniques, our model producing lower lip vertex error than the competitors.
+            In terms of the qualitative evaluation, we show by means of a user study, that our model clearly outperforms one of the state-of-the-art methods, while being rated similarly or slightly worse than the other 2 competitors.
+            Furthermore, ablation of the diffusion component shows better performance over a variant of the model that does not use diffusion, strengthening our intuition over the benefits of the diffusion process.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="./static/videos/FaceDiffuser.mp4"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!--/ Paper video. -->
+
+
+    <!-- Methodology -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Methodology - Training</h2>
+        <div class="content has-text-justified">
+          FaceDiffuser learns to denoise facial expressions and generate animations based on input speech.
+          Audio speech embeddings from the pre-trained HuBERT model combined with embeddings from the noised ground truth animation sequence are used to train the Facial Decoder.
+          The Facial Decoder is comprised of a sequence of GRU layers followed by a fully connected layer and learns to predict (i) vertex displacements or (ii) rig control (blendshape) values.
+          The predicted sequence is compared with the ground truth sequence by computing the loss, which is then backpropagated to update the model parameters.
+        </div>
+        <div class="methodology-image">
+        <img src="./static/images/training.png"> </img>
+        </div>
+      </div>
+    </div>
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Methodology - Inference</h2>
+        <div class="content has-text-justified">
+        FaceDiffuser inference is an iterative process from the maximum diffustion timestep T decreasing to 1. The initial noised animation input is represented by actual noise from the normal distribution.
+          At each step, we provide the network with the audio and noised animation input. The predicted motion is then diffused again and fed to the next step of the iteration.
+        </div>
+        <div class="methodology-image">
+        <img src="./static/images/inference.png"> </img>
+        </div>
+      </div>
+    </div>
+    <!--/ Methodology -->
+
+  </div>
+</section>
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{stan2023facediff,
+  author    = {Stan, Stefan and Haque, Kazi I. and Yumak, Zerrin},
+  title     = {FaceDiffusion: Speech-Driven Facial Animation Synthesis Using Diffusion Models},
+  year      = {2023},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website based on the <a
+              href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> project page.
+            If you want to reuse their source code, please credit them appropriately.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
