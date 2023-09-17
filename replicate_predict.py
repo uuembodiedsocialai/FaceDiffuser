@@ -60,7 +60,7 @@ def create_gaussian_diffusion(args):
     # default params
     sigma_small = True
     predict_xstart = True  # we always predict x_start (a.k.a. x0), that's our deal!
-    steps = args['diff_steps']
+    steps = args.diff_steps
     scale_beta = 1.  # no scaling
     timestep_respacing = ''  # can be used for ddim sampling, we don't use it.
     learn_sigma = False
@@ -99,21 +99,21 @@ def render_animation(prediction, audio_path):
     fps = 25
     fourcc = cv2.VideoWriter_fourcc(*'MP4V')
 
-    cam = pyrender.PerspectiveCamera(yfov=np.pi / 3.0, aspectRatio=1.414)
-    camera_pose = np.array([[1.0, 0, 0.0, 0.00],
-                            [0.0, 1.0, 0.0, 0.00],
-                            [0.0, 0.0, 1.0, 1.0],
+    cam = pyrender.PerspectiveCamera(yfov=np.pi / 3.0, aspectRatio=1)
+    camera_pose = np.array([[1.0, 0, 0.0, 0.0],
+                            [0.0, 1.0, 0.0, 0],
+                            [0.0, 0.0, 1.0, 1],
                             [0.0, 0.0, 0.0, 1.0]])
     light = pyrender.DirectionalLight(color=[1.0, 1.0, 1.0], intensity=10.0)
-    r = pyrender.OffscreenRenderer(640, 480)
+    r = pyrender.OffscreenRenderer(480, 480)
 
-    video_woA_path = "tmp/tmp.mp4"
-    video = cv2.VideoWriter(video_woA_path, fourcc, fps, (640, 480))
+    video_woA_path = "renders/tmp/tmp.mp4"
+    video = cv2.VideoWriter(video_woA_path, fourcc, fps, (480, 480))
 
     # Load the NPY file for the original frames
     frames = prediction.reshape((-1, 70110 // 3, 3))
 
-    ref_mesh = trimesh.load_mesh('BIWI/BIWI_topology.obj', process=False)
+    ref_mesh = trimesh.load_mesh('data/BIWI/templates/BIWI_topology.obj', process=False)
     for i, frame in enumerate(frames):
         ref_mesh.vertices = frames[i, :, :]
         py_mesh = pyrender.Mesh.from_trimesh(ref_mesh)
@@ -130,15 +130,15 @@ def render_animation(prediction, audio_path):
         scene.add(light, pose=camera_pose)
         color, _ = r.render(scene)
 
-        output_frame = f"tmp/{i:04d}.png"
+        output_frame = f"renders/tmp/{i:04d}.png"
 
         cv2.imwrite(output_frame, color)
         frame = cv2.imread(output_frame)
-        video.write(frame)
+        video.write(color)
 
     video.release()
-    video_filename = "videos/result.mp4"
-    video_frames = ffmpeg.input(f"tmp/tmp.mp4")
+    video_filename = "renders/result.mp4"
+    video_frames = ffmpeg.input(f"renders/tmp/tmp.mp4")
     audio = ffmpeg.input(audio_path)
 
     ffmpeg.concat(video_frames, audio, v=1, a=1).output(video_filename).run(overwrite_output=True)
@@ -163,7 +163,7 @@ class Predictor(BasePredictor):
 
         self.diffusion = create_gaussian_diffusion(args)
 
-        with open('data/BIWI/templates_scaled.pkl', 'rb') as fin:
+        with open('data/BIWI/templates.pkl', 'rb') as fin:
             self.templates = pickle.load(fin, encoding='latin1')
 
     # Define the arguments and types the model takes as input
@@ -176,7 +176,7 @@ class Predictor(BasePredictor):
                                                   choices=["F2", "F3", "F4", "M3", "M4", "M5"]),
                 skip_timesteps: int = Input(
                     description="Number of diffussion timesteps to skip.\n 0 will give the best result but takes the longest to compute.",
-                    le=500, ge=0)
+                    le=500, ge=0, default=450)
                 ) -> Path:
         args = read_args()
         conditioning_subjects = {
@@ -208,10 +208,10 @@ class Predictor(BasePredictor):
         audio_feature = np.reshape(audio_feature, (-1, audio_feature.shape[0]))
         audio_feature = torch.FloatTensor(audio_feature).to(device="cuda")
 
-        num_frames = int(audio_feature.shape[0] / sampling_rate * args['output_fps'])
+        num_frames = int(audio_feature.shape[0] / sampling_rate * args.output_fps) - 1
         prediction = self.diffusion.p_sample_loop(
             self.model,
-            (1, num_frames, args['vertice_dim']),
+            (1, num_frames, args.vertice_dim),
             clip_denoised=False,
             model_kwargs={
                 "cond_embed": audio_feature,
