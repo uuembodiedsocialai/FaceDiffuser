@@ -41,11 +41,11 @@ def test_model(args):
         )
     print(model)
 
-    model.load_state_dict(torch.load('pretrained_models/{}.pth'.format(args.model_name)))
+    model.load_state_dict(torch.load('pretrained_models/{}.pth'.format(args.model_name), map_location='cuda'))
     model = model.to(torch.device(args.device))
     model.eval()
 
-    template_file = os.path.join(args.dataset, args.template_path)
+    template_file = os.path.join(args.data_path, args.dataset, args.template_path)
     with open(template_file, 'rb') as fin:
         templates = pickle.load(fin, encoding='latin1')
 
@@ -58,7 +58,10 @@ def test_model(args):
     one_hot = np.reshape(one_hot, (-1, one_hot.shape[0]))
     one_hot = torch.FloatTensor(one_hot).to(device=args.device)
 
-    temp = templates.get(args.subject, np.zeros((args.vertice_dim // 3, 3)))
+    if args.dataset in ["BIWI", "multiface", "vocaset"]:
+        temp = templates[args.subject]
+    else:
+        temp = np.zeros((args.vertice_dim // 3, 3))
 
     template = temp.reshape((-1))
     template = np.reshape(template, (-1, template.shape[0]))
@@ -86,7 +89,6 @@ def test_model(args):
             "cond_embed": audio_feature,
             "one_hot": one_hot,
             "template": template,
-            "guidance_weight": 0,
         },
         skip_timesteps=args.skip_steps,  # 0 is the default value - i.e. don't skip any step
         init_image=None,
@@ -110,38 +112,35 @@ def test_model(args):
 def render(args):
     fps = args.fps
     fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-    render_path = "demo/render/"
-    frames_folder = render_path + "frames/"
-    video_woA_folder = render_path + "video_wo_audio/"
+    render_path = "renders/"
+    frames_folder = render_path + "tmp/"
+    video_woA_folder = frames_folder
     video_wA_folder = render_path + "video_with_audio/"
-    emo_label = "emotional"
-    if args.emotion == 0:
-        emo_label = "neutral"
 
     wav_path = args.wav_path
     test_name = os.path.basename(wav_path).split(".")[0]
-    out_file_name = test_name + "_" + emo_label + "_" + args.subject + "_Condition_" + args.condition
+    out_file_name = test_name + "_" + args.dataset + "_" + args.subject + "_condition_" + args.condition
     predicted_vertices_path = os.path.join(args.result_path, out_file_name + ".npy")
     if args.dataset == "BIWI":
-        template_file = os.path.join(args.dataset, args.render_template_path + "/BIWI_topology.obj")
+        template_file = "data/BIWI/templates/BIWI_topology.obj"
 
     cam = pyrender.PerspectiveCamera(yfov=np.pi / 3.0, aspectRatio=1.414)
     camera_pose = np.array([[1.0, 0, 0.0, 0.00],
-                            [0.0, -1.0, 0.0, 0.00],
-                            [0.0, 0.0, 1.0, -1.6],
+                            [0.0, 1.0, 0.0, 0.00],
+                            [0.0, 0.0, 1.0, 1.0],
                             [0.0, 0.0, 0.0, 1.0]])
 
     light = pyrender.DirectionalLight(color=[1.0, 1.0, 1.0], intensity=10.0)
 
-    # r = pyrender.OffscreenRenderer(640, 480)
-    r = pyrender.OffscreenRenderer(1920, 1440)
+    r = pyrender.OffscreenRenderer(640, 480)
+    # r = pyrender.OffscreenRenderer(1920, 1440)
 
     print("rendering the predicted sequence: ", test_name)
 
     video_woA_path = video_woA_folder + out_file_name + '.mp4'
     video_wA_path = video_wA_folder + out_file_name + '.mp4'
-    # video = cv2.VideoWriter(video_woA_path, fourcc, fps, (640, 480))
-    video = cv2.VideoWriter(video_woA_path, fourcc, fps, (1920, 1440))
+    video = cv2.VideoWriter(video_woA_path, fourcc, fps, (640, 480))
+    # video = cv2.VideoWriter(video_woA_path, fourcc, fps, (1920, 1440))
 
     ref_mesh = trimesh.load_mesh(template_file, process=False)
     seq = np.load(predicted_vertices_path)
@@ -159,7 +158,7 @@ def render(args):
         scene.add(light, pose=camera_pose)
         color, _ = r.render(scene)
 
-        output_frame = frames_folder + "frame" + str(f) + ".jpg"
+        output_frame = f"renders/tmp/{f:04d}.png"
         cv2.imwrite(output_frame, color)
         frame = cv2.imread(output_frame)
         video.write(frame)
@@ -177,6 +176,7 @@ def main():
     parser = argparse.ArgumentParser(
         description='FaceXHuBERT: Text-less Speech-driven E(X)pressive 3D Facial Animation Synthesis using Self-Supervised Speech Representation Learning')
     parser.add_argument("--model_name", type=str, default="FaceXHuBERT")
+    parser.add_argument("--data_path", type=str, default="data", help='name of the dataset folder. eg: BIWI')
     parser.add_argument("--dataset", type=str, default="BIWI", help='name of the dataset folder. eg: BIWI')
     parser.add_argument("--fps", type=float, default=25, help='frame rate - 25 for BIWI')
     parser.add_argument("--feature_dim", type=int, default=256, help='GRU Vertex Decoder hidden size')

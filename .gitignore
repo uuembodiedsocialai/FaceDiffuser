@@ -1,1 +1,5 @@
-*\__pycache__\*
+*/__pycache__/*
+.*
+*.pyc
+pretrained_models/pretrained_BIWI.pth
+pretrained_weights/*
