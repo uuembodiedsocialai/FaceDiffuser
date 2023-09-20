@@ -6,7 +6,7 @@
         content="FaceDiffusion produces facial animation for 3D characters based on speech">
   <meta name="keywords" content="FaceDiffusion, Diffusion, Animation">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FaceDiffusion: Speech-Driven Facial Animation Synthesis Using Diffusion Models</title>
+  <title>FaceDiffusion: Speech-Driven 3D Facial Animation Synthesis Using Diffusion Models</title>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
         rel="stylesheet">
@@ -35,7 +35,7 @@
       <div class="columns is-centered">
         <div class="column has-text-centered">
           <h1 class="title is-1 publication-title">FaceDiffusion</h1> 
-          <h2 class="title is-3 publication-title">Speech-Driven Facial Animation Synthesis Using Diffusion Models </h2>
+          <h2 class="title is-3 publication-title">Speech-Driven 3D Facial Animation Synthesis Using Diffusion Models </h2>
           <div class="is-size-3 publication-authors">
             <span class="author-block"> <a href="https://stefan-st.github.io/personal-website/"> Stefan Stan </a>, </span>
             <span class="author-block"> <a href="https://www.uu.nl/staff/KIHaque"> Kazi Injamamul Haque </a>, </span>
@@ -61,7 +61,7 @@
               </span>
               <!-- Code Link. -->
               <span class="link-block">
-                <a href="https://github.com/stefan-st/FaceDiffuser"
+                <a href="https://github.com/uuembodiedsocialai/FaceDiffuser"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
@@ -94,18 +94,11 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Speech-driven facial animation synthesis has been a notable area of research in recent years, with new state-of-the-art approaches constantly emerging. Deep-learning techniques have demonstrated remarkable results for this task, clearly outperforming procedural methods.
-            However, we notice a relevant scarcity of methods for generating rigged character facial animations that could be seamlessly integrated into animation pipelines. There is also a lack of non-deterministic methods that can produce a high variety of animations.
-            In this paper, we present FaceDiffuser, a deep-learning model able to generate expressive and diverse facial animation sequences based on speech audio input. To the best of our knowledge, we are the first to employ the diffusion mechanism for the task of 3D facial animation synthesis, leveraging their non-deterministic nature for a better and more expressive facial animation generation.
-            We use a pre-trained large speech representation model, HuBERT, to extract speech features, as it has proven to be effective even in noisy audio cases, making our model more robust to noisy settings.
-            We show that our model is robust to noisy audio and can be used to animate 3D vertex facial meshes as well as rigged characters.
-          </p>
-          <p>
-            We utilise 4D facial scan datasets as well as datasets containing rigged character animations, such as our in-house dataset UUDaMM, along with the recently released BEAT blendshape-based dataset.
-            The results are assessed using both subjective and objective metrics in comparison to state-of-the-art results as well as the ground truth data.
-            We show that our model performs objectively better than state-of-the-art techniques, our model producing lower lip vertex error than the competitors.
-            In terms of the qualitative evaluation, we show by means of a user study, that our model clearly outperforms one of the state-of-the-art methods, while being rated similarly or slightly worse than the other 2 competitors.
-            Furthermore, ablation of the diffusion component shows better performance over a variant of the model that does not use diffusion, strengthening our intuition over the benefits of the diffusion process.
+            Speech-driven 3D facial animation synthesis has been a challenging task both in industry and research. Recent methods mostly focus on deterministic deep learning methods meaning that given a speech input, the output is always the same.
+            However, in reality, the non-verbal facial cues that reside throughout the face are non-deterministic in nature. In addition, majority of the approaches focus on 3D vertex based datasets and methods that are compatible with existing facial animation pipelines with rigged characters is scarce.
+            To eliminate these issues, we present FaceDiffuser, a non-deterministic deep learning model to generate speech-driven facial animations that is trained with both 3D vertex and blendshape based datasets.
+            Our method is based on the diffusion technique and uses the pre-trained large speech representation model HuBERT to encode the audio input. To the best of our knowledge, we are the first to employ the diffusion method for the task of speech-driven 3D facial animation synthesis.
+            We have run extensive objective and subjective analyses and show that our approach achieves better or comparable results in comparison to the state-of-the-art methods.  We also introduce a new in-house dataset that is based on a blendshape based rigged character.
           </p>
         </div>
       </div>
@@ -180,15 +173,6 @@ address = {New York, NY, USA},
 
 <footer class="footer">
   <div class="container">
-    <div class="content has-text-centered">
-      <a class="icon-link"
-         href="./static/videos/nerfies_paper.pdf">
-        <i class="fas fa-file-pdf"></i>
-      </a>
-      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
-        <i class="fab fa-github"></i>
-      </a>
-    </div>
     <div class="columns is-centered">
       <div class="column is-8">
         <div class="content">

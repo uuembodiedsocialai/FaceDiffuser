@@ -6,7 +6,7 @@ Code repository for the implementation of: *FaceDiffuser: Speech-Driven Facial A
 > By employing the diffusion mechanism our model produces different results for every new
 > inference.
 
->We reccomend visiting the project website and watching the supplementary video.
+>We reccomend visiting the project [website](https://uuembodiedsocialai.github.io/FaceDiffuser/) and watching the supplementary video.
 
 ## Environment
 
