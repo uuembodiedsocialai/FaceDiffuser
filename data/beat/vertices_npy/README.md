@@ -1,0 +1,1 @@
+This folder will contain the blendshape data for all the sequences in `.npy` format. 
