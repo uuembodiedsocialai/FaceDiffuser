@@ -81,6 +81,15 @@ cd data/mutliface
 python convert_topology.py
 python preprocess.py
 ```
+
+### Beat
+
+Download the Beat dataset from here: https://pantomatrix.github.io/BEAT/.
+Keep in mind that only the facial motion (stored in json files)  and audio (stored in wav files) are needed for training the model.
+
+Follow the instructions in `data/beat` for preprocessing the data before training.
+
+
 ## Model Training 
 
 ### Training and Testing
@@ -110,7 +119,7 @@ python preprocess.py
 ### Acknowledgements
 
 We borrow and adapt the code from [FaceXHuBERT](https://github.com/galib360/FaceXHuBERT), 
-[MDM](https://github.com/GuyTevet/motion-diffusion-model), [CodeTalker](https://github.com/Doubiiu/CodeTalker).
+[MDM](https://github.com/GuyTevet/motion-diffusion-model), [EDGE](https://edge-dance.github.io/), [CodeTalker](https://github.com/Doubiiu/CodeTalker).
 Thanks for making their code available and facilitating future research.
 Additional thanks to [huggingface-transformers](https://huggingface.co/) for the implementation of HuBERT.
 
