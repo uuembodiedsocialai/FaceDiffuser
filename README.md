@@ -106,6 +106,25 @@ Follow the instructions in `data/beat` for preprocessing the data before trainin
 	```
 	The test split predicted results will be saved in the `result/`. The trained models (saves the model in 25 epoch interval) will be saved in the `save/` folder.
 
+
+### Predictions
+
+- Download the trained weights from [here](https://mega.nz/folder/jlBF0Dpa#U3G1lJCZ4dijMoSc9gmqSg) and add them to the folder `pretrained_models`.
+- To generate predictions use the commands:
+
+BIWI
+```commandline
+python predict.py --dataset BIWI --vertice_dim 70110 --feature_dim 512 --output_fps 25 --train_subjects "F2 F3 F4 M3 M4 M5" --test_subjects "F2 F3 F4 M3 M4 M5" --model_name "pretrained_BIWI" --fps 25 --condition "F2" --subject "F2" --diff_steps 500 --gru_dim 512 --wav_path "test.wav"  
+```
+Vocaset
+```commandline
+python predict.py --dataset vocaset --vertice_dim 15069 --feature_dim 256 --output_fps 30 --train_subjects "FaceTalk_170728_03272_TA FaceTalk_170904_00128_TA FaceTalk_170725_00137_TA FaceTalk_170915_00223_TA FaceTalk_170811_03274_TA FaceTalk_170913_03279_TA FaceTalk_170904_03276_TA FaceTalk_170912_03278_TA" --test_subjects "FaceTalk_170809_00138_TA FaceTalk_170731_00024_TA" --model_name "pretrained_vocaset" --fps 30 --condition "FaceTalk_170728_03272_TA" --subject "FaceTalk_170731_00024_TA" --diff_steps 1000 --gru_dim 256 --wav_path "test.wav"
+```
+Multiface
+```commandline
+python predict.py --dataset multiface --vertice_dim 18516 --feature_dim 256 --output_fps 30 --train_subjects "2 3 6 7 9 10 11 12 13" --test_subjects "1 4 5 8" --model_name "pretrained_multiface" --fps 30 --condition "2" --subject "1" --diff_steps 1000 --gru_dim 256 --wav_path "test.wav"
+```
+    
 ### Visualization
 
 - Run the following command to render the predicted test sequences stored in `result/`:
