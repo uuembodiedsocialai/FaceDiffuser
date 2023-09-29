@@ -27,7 +27,6 @@ class Dataset(data.Dataset):
         audio = self.data[index]["audio"]
         vertice = self.data[index]["vertice"]
         template = self.data[index]["template"]
-        emotion_id = 0
 
         if self.data_type == "train":
             subject = file_name.split("_")[0]
@@ -51,7 +50,6 @@ def read_data(args):
 
     audio_path = os.path.join(args.data_path, args.dataset, args.wav_path)
     vertices_path = os.path.join(args.data_path, args.dataset, args.vertices_path)
-    listener_path = os.path.join(args.data_path, args.dataset, args.listener_path)
 
     processor = Wav2Vec2Processor.from_pretrained(
         "facebook/hubert-xlarge-ls960-ft")  # HuBERT uses the processor of Wav2Vec 2.0
@@ -93,13 +91,11 @@ def read_data(args):
                 data[key]["name"] = f
                 data[key]["template"] = temp.reshape((-1))
                 vertice_path = os.path.join(vertices_path, f.replace("wav", "npy"))
-                listener_path = os.path.join(listener_path, f.replace("wav", "npy"))
                 if not os.path.exists(vertice_path):
                     del data[key]
                     print("Vertices Data Not Found! ", vertice_path)
                 else:
                     data[key]["vertice"] = vertice_path
-                    data[key]["listener"] = listener_path
 
     train_split = defaultdict(list)
     val_split = defaultdict(list)
