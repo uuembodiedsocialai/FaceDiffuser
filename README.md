@@ -115,6 +115,8 @@ Follow the instructions in `data/beat` for preprocessing the data before trainin
 	```
 	The rendered videos will be saved in the `renders/videos/` folder.
 
+### Trained Weights
+The trained weights can be downloaded from [THIS](https://mega.nz/folder/jlBF0Dpa#U3G1lJCZ4dijMoSc9gmqSg) link. 
 
 ### Acknowledgements
 
