@@ -3,6 +3,7 @@ import argparse
 import torch
 import trimesh
 import numpy as np
+import pandas as pd
 import cv2
 import os
 import ffmpeg
@@ -101,13 +102,23 @@ def test_model(args):
     prediction = prediction.squeeze()
     prediction = prediction.detach().cpu().numpy()
 
+    # scale back rig parameters for rendering in Maya
+    if args.dataset == 'damm_rig_equal':
+        with open('data/damm_rig_equal/scaler_192.pkl', 'rb') as f:
+            RIG_SCALER = pickle.load(f)
+        prediction = RIG_SCALER.inverse_transform(prediction)
+
     elapsed = time.time() - start_time
     print("Inference time for ", prediction.shape[0], " frames is: ", elapsed, " seconds.")
     print("Inference time for 1 frame is: ", elapsed / prediction.shape[0], " seconds.")
-    print("Inference time for 1 second of audio is: ", ((elapsed * 25) / prediction.shape[0]), " seconds.")
+    print("Inference time for 1 second of audio is: ", ((elapsed * args.fps) / prediction.shape[0]), " seconds.")
     out_file_name = test_name + "_" + args.dataset + "_" + args.subject + "_condition_" + args.condition
     np.save(os.path.join(args.result_path, out_file_name), prediction)
 
+    # save csv to be used directly for rendering in Maya
+    if args.dataset == 'damm_rig_equal':
+        df = pd.DataFrame(prediction)
+        df.to_csv(os.path.join(args.result_path, f"{out_file_name}_Damm.csv"), index=None, header=None)
 
 def render(args):
     fps = args.fps
@@ -133,14 +144,11 @@ def render(args):
     light = pyrender.DirectionalLight(color=[1.0, 1.0, 1.0], intensity=10.0)
 
     r = pyrender.OffscreenRenderer(640, 480)
-    # r = pyrender.OffscreenRenderer(1920, 1440)
 
     print("rendering the predicted sequence: ", test_name)
-
     video_woA_path = video_woA_folder + out_file_name + '.mp4'
     video_wA_path = video_wA_folder + out_file_name + '.mp4'
     video = cv2.VideoWriter(video_woA_path, fourcc, fps, (640, 480))
-    # video = cv2.VideoWriter(video_woA_path, fourcc, fps, (1920, 1440))
 
     ref_mesh = trimesh.load_mesh(template_file, process=False)
     seq = np.load(predicted_vertices_path)
@@ -173,9 +181,8 @@ def render(args):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='FaceXHuBERT: Text-less Speech-driven E(X)pressive 3D Facial Animation Synthesis using Self-Supervised Speech Representation Learning')
-    parser.add_argument("--model_name", type=str, default="FaceXHuBERT")
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_name", type=str, default="pretrained_BIWI")
     parser.add_argument("--data_path", type=str, default="data", help='name of the dataset folder. eg: BIWI')
     parser.add_argument("--dataset", type=str, default="BIWI", help='name of the dataset folder. eg: BIWI')
     parser.add_argument("--fps", type=float, default=25, help='frame rate - 25 for BIWI')

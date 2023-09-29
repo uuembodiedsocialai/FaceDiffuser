@@ -91,7 +91,7 @@ class FaceDiffDamm(nn.Module):
         nn.init.normal_(self.out.weight)
         nn.init.normal_(self.out.bias)
 
-    def forward(self, noised_anim, timesteps, cond_embed, one_hot=None):
+    def forward(self, noised_anim, timesteps, cond_embed, one_hot=None, template=None):
         _, n_frames, _ = noised_anim.shape
         emb = self.embed_timestep(timesteps)
         emb = emb.repeat(n_frames, 1, 1)

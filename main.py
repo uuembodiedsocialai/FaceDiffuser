@@ -260,8 +260,7 @@ def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='FaceXHuBERT: Text-less Speech-driven E(X)pressive 3D Facial Animation Synthesis using Self-Supervised Speech Representation Learning')
+    parser = argparse.ArgumentParser()
     parser.add_argument("--lr", type=float, default=0.0001, help='learning rate')
     parser.add_argument("--dataset", type=str, default="BIWI", help='Name of the dataset folder. eg: BIWI')
     parser.add_argument("--data_path", type=str, default="data")
