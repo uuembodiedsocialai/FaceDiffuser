@@ -191,7 +191,6 @@ def test_diff(args, model, test_loader, epoch, diffusion, device="cuda"):
                         "cond_embed": audio,
                         "one_hot": one_hot,
                         "template": template,
-                        "guidance_weight": 0,
                     },
                     skip_timesteps=args.skip_steps,  # 0 is the default value - i.e. don't skip any step
                     init_image=None,
@@ -234,7 +233,6 @@ def test_diff(args, model, test_loader, epoch, diffusion, device="cuda"):
                         "cond_embed": audio,
                         "one_hot": one_hot,
                         "template": template,
-                        "guidance_weight": 0,
                     },
                     skip_timesteps=args.skip_steps,  # 0 is the default value - i.e. don't skip any step
                     init_image=None,
@@ -301,7 +299,6 @@ def main():
                 vertice_dim=args.vertice_dim,
                 latent_dim=args.feature_dim,
                 diffusion_steps=args.diff_steps,
-                cond_dropout_type=args.cond_drop,
                 gru_latent_dim=args.gru_dim,
                 num_layers=args.gru_layers,
             )
@@ -311,7 +308,6 @@ def main():
             vertice_dim=args.vertice_dim,
             latent_dim=args.feature_dim,
             diffusion_steps=args.diff_steps,
-            cond_dropout_type=args.cond_drop,
             gru_latent_dim=args.gru_dim,
             num_layers=args.gru_layers,
         )

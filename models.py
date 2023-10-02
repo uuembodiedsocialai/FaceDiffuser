@@ -155,7 +155,6 @@ class FaceDiffBeat(nn.Module):
             latent_dim: int = 256,
             cond_feature_dim: int = 1536,
             diffusion_steps: int = 1000,
-            cond_dropout_type: str = 'full_rand',
             gru_latent_dim: int = 256,
             num_layers: int = 2,
 
@@ -165,8 +164,6 @@ class FaceDiffBeat(nn.Module):
         self.i_fps = args.input_fps # audio fps (input to the network)
         self.o_fps = args.output_fps # 4D Scan fps (output or target)
         self.one_hot_timesteps = np.eye(args.diff_steps)
-        self.cond_drop_prob = 0.25
-        self.cond_dropout_type = cond_dropout_type
 
         # Audio Encoder
         self.audio_encoder = HubertModel.from_pretrained("facebook/hubert-base-ls960")
@@ -201,12 +198,6 @@ class FaceDiffBeat(nn.Module):
             dropout=0.3
         )
         self.final_layer = nn.Linear(gru_latent_dim, vertice_dim)
-
-    def guided_forward(self, x, times, cond_embed, template, one_hot):
-        unc = self.forward(x, times, cond_embed, template, one_hot, guidance_weight=1)
-        conditioned = self.forward(x, times, cond_embed, template, one_hot, guidance_weight=0)
-
-        return self.loss_mask * conditioned + (1 - self.loss_mask) * unc
 
     def forward(
             self, x: Tensor,  times: Tensor, cond_embed: Tensor
@@ -246,7 +237,6 @@ class FaceDiff(nn.Module):
             latent_dim: int = 512,
             cond_feature_dim: int = 1536,
             diffusion_steps: int = 500,
-            cond_dropout_type: str = 'full_rand',
             gru_latent_dim: int = 512,
             num_layers: int = 2,
 
@@ -257,14 +247,12 @@ class FaceDiff(nn.Module):
         self.i_fps = args.input_fps # audio fps (input to the network)
         self.o_fps = args.output_fps # 4D Scan fps (output or target)
         self.one_hot_timesteps = np.eye(args.diff_steps)
-        self.cond_drop_prob = 0.2
-        self.cond_dropout_type = cond_dropout_type
 
         # Audio Encoder
         self.audio_encoder = HubertModel.from_pretrained("facebook/hubert-base-ls960")
         self.audio_dim = self.audio_encoder.encoder.config.hidden_size
         self.audio_encoder.feature_extractor._freeze_parameters()
-        self.device = f"cuda:{args.device_idx}"
+        self.device = args.device
 
         frozen_layers = [0,1]
 
@@ -303,12 +291,6 @@ class FaceDiff(nn.Module):
 
         # Subject embedding, S
         self.obj_vector = nn.Linear(len(args.train_subjects.split()), latent_dim, bias=False)
-
-    def guided_forward(self, x, times, cond_embed, template, one_hot, guidance_weight):
-        unc = self.forward(x, times, cond_embed, template, one_hot, cond_drop_prob=1)
-        conditioned = self.forward(x, times, cond_embed, template, one_hot, cond_drop_prob=0)
-
-        return guidance_weight * conditioned + (1 - guidance_weight) * unc
 
     def forward(
             self, x: Tensor,  times: Tensor, cond_embed: Tensor, template, one_hot,
