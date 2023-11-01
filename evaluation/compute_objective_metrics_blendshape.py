@@ -6,7 +6,7 @@ import os
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--pred_path", type=str, default="")
-    parser.add_argument("--gt_path", type=str, default="/scratch/2176327/data/damm_rig_equal/vertices_npy_192/")
+    parser.add_argument("--gt_path", type=str, default="")
     args = parser.parse_args()
 
 
@@ -63,7 +63,7 @@ def main():
 def main_beat():
     parser = argparse.ArgumentParser()
     parser.add_argument("--pred_path", type=str, default="")
-    parser.add_argument("--gt_path", type=str, default="/scratch/2176327/data/beat/vertices_npy")
+    parser.add_argument("--gt_path", type=str, default="")
     args = parser.parse_args()
 
 
