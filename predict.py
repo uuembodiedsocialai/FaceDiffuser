@@ -123,7 +123,7 @@ def test_model(args):
 def render(args):
     fps = args.fps
     fourcc = cv2.VideoWriter_fourcc(*'MP4V')
-    render_path = "renders/"
+    render_path = "demo/renders/"
     frames_folder = render_path + "tmp/"
     video_woA_folder = frames_folder
     video_wA_folder = render_path + "video_with_audio/"
@@ -132,13 +132,14 @@ def render(args):
     test_name = os.path.basename(wav_path).split(".")[0]
     out_file_name = test_name + "_" + args.dataset + "_" + args.subject + "_condition_" + args.condition
     predicted_vertices_path = os.path.join(args.result_path, out_file_name + ".npy")
-    if args.dataset == "BIWI":
-        template_file = "data/BIWI/templates/BIWI_topology.obj"
+    template_file = f"data/{args.dataset}/templates/face_template.obj"
+    camera_dist = 2.0 if args.dataset == "multiface"  else 1.0
+
 
     cam = pyrender.PerspectiveCamera(yfov=np.pi / 3.0, aspectRatio=1.414)
     camera_pose = np.array([[1.0, 0, 0.0, 0.00],
                             [0.0, 1.0, 0.0, 0.00],
-                            [0.0, 0.0, 1.0, 1.0],
+                            [0.0, 0.0, 1.0, camera_dist],
                             [0.0, 0.0, 0.0, 1.0]])
 
     light = pyrender.DirectionalLight(color=[1.0, 1.0, 1.0], intensity=10.0)
@@ -152,9 +153,8 @@ def render(args):
 
     ref_mesh = trimesh.load_mesh(template_file, process=False)
     seq = np.load(predicted_vertices_path)
-    seq = np.reshape(seq, (-1, 70110 // 3, 3))
+    seq = np.reshape(seq, (-1, args.vertice_dim // 3, 3))
     ref_mesh.vertices = seq[0, :, :]
-    py_mesh = pyrender.Mesh.from_trimesh(ref_mesh)
 
     for f in range(seq.shape[0]):
         ref_mesh.vertices = seq[f, :, :]
@@ -166,7 +166,7 @@ def render(args):
         scene.add(light, pose=camera_pose)
         color, _ = r.render(scene)
 
-        output_frame = f"renders/tmp/{f:04d}.png"
+        output_frame = f"demo/renders/tmp/{f:04d}.png"
         cv2.imwrite(output_frame, color)
         frame = cv2.imread(output_frame)
         video.write(frame)
@@ -197,7 +197,7 @@ def main():
     parser.add_argument("--condition", type=str, default="M3", help='select a conditioning subject from train_subjects')
     parser.add_argument("--subject", type=str, default="M1",
                         help='select a subject from test_subjects or train_subjects')
-    parser.add_argument("--template_path", type=str, default="templates_scaled.pkl",
+    parser.add_argument("--template_path", type=str, default="templates.pkl",
                         help='path of the personalized templates')
     parser.add_argument("--render_template_path", type=str, default="templates",
                         help='path of the mesh in BIWI topology')
@@ -216,7 +216,7 @@ def main():
 
     test_model(args)
 
-    # only vertex meshed can be rendered directly
+    # only vertex meshes can be rendered directly
     # the blendshape results are to be rendered in external engines
     # like Maya, Blender, UE
     if args.dataset in ["BIWI", "multiface", "vocaset"]:
