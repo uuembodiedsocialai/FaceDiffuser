@@ -16,7 +16,7 @@ def main():
     # In the end this metric was not used 
     parser = argparse.ArgumentParser()
     parser.add_argument("--train_subjects", type=str, default="F2 F3 F4 M3 M4 M5")
-    parser.add_argument("--path", type=str, default="/scratch/2176327/data/BIWI/vertices_npy/")
+    parser.add_argument("--path", type=str, default="/data/BIWI/vertices_npy/")
     parser.add_argument("--diversity_times", type=int, default=10)
     parser.add_argument("--dataset", type=str, default="BIWI")
     args = parser.parse_args()

@@ -23,39 +23,13 @@ Code repository for the implementation of: *FaceDiffuser: Speech-Driven Facial A
 ## Data
 ### BIWI
 
-The [Biwi 3D Audiovisual Corpus of Affective Communication](https://data.vision.ee.ethz.ch/cvl/datasets/b3dac2.en.html) dataset is available upon request for research or academic purposes. You will need the following files from the the dataset: 
-
-- faces01.tgz, faces02.tgz, faces03.tgz, faces04.tgz, faces05.tgz and rest.tgz
-- Place all the faces0*.tgz archives in `data/BIWI/ForProcessing/FaceData/` folder
-- Place the rest.tgz archive in `data/BIWI/ForProcessing/rest/` folder
+The [Biwi 3D Audiovisual Corpus of Affective Communication](https://data.vision.ee.ethz.ch/cvl/datasets/b3dac2.en.html) dataset is available upon request for research or academic purposes. 
 
 
-#### Data Preparation and Data Pre-process 
-Follow the steps below sequentially as they appear - 
+#### BIWI Data Preparation and Data Pre-process 
+In the interest of fair comparison with previous works, BIWI dataset was prepared according to the data processing that was done in [CodeTalker](https://github.com/Doubiiu/CodeTalker). Please follow this [link](https://github.com/Doubiiu/CodeTalker/tree/main/BIWI) and follow the instructions there to prepare the dataset. After processing, the `*.npy` files should be in `data/BIWI/vertices_npy/` folder whereas the `.wav` files should be in `data/BIWI/wav/` folder. This processing only prepares the emotional subset sequences. The results reported in the paper are based on this pre-processed data. 
 
-- You will need [Matlab](https://mathworks.com/products/matlab.html) installed on you machine to prepapre the data for pre-processing
-- Open Anaconda Promt CLI, activate FaceXHuBERT env in the directory- `data/BIWI/ForPorcessing/rest/`
-- Run the following command
-    ```
-    tar -xvzf rest.tgz
-    ```
-- After extracting, you will see the `audio/` folder that contains the input audios needed for network training in .wav format
-- Run the `wav_process.py` script. This will process the `audio/` folder and copy the needed audio sequences with proper names to `data/BIWI/wav/` folder for training
-    ```
-    python wav_process.py
-    ```
-- Open Anaconda Promt CLI, activate FaceXHuBERT env in the directory- `BIWI/ForPorcessing/FaceData/`
-- Run the following command for extracting all the archives. Replace `*` with (1-5 for five archives)
-    ```
-    tar -xvzf faces0*.tgz
-    ``` 
-- After extracting, you will see a folder named `faces/`. Move all the .obj files from this folder  (i.e. F1.obj-M6.obj) to `FaceXHuBERT/BIWI/templates/` folder 
-- Run the shell script `Extract_all.sh`. This will extract all the archives for all subjects and for all sequences. You will have frame-by-frame vertex data in `frame_*.vl` binary file format  
-- Run the Matlab script `vl2csv_recusive.m`. This will convert all the `.vl` files into `.csv` files
-- Run the `vertex_process.py` script. This will process the data and place the processed data in `FaceXHuBERT/BIWI/vertices_npy/` folder for network training
-    ```
-    python vertex_process.py
-    ```
+P.S.: [FaceXHuBERT](https://github.com/galib360/FaceXHu) also provides a data processing workflow that processes the full BIWI dataset (including neutral and emotional sequences). 
 
 ### VOCASET
 
