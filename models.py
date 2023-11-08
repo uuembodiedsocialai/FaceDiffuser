@@ -200,7 +200,7 @@ class FaceDiffBeat(nn.Module):
         self.final_layer = nn.Linear(gru_latent_dim, vertice_dim)
 
     def forward(
-            self, x: Tensor,  times: Tensor, cond_embed: Tensor
+            self, x: Tensor,  times: Tensor, cond_embed: Tensor, one_hot=None, template=None
     ):
         batch_size, device = x.shape[0], x.device
         times = torch.FloatTensor(self.one_hot_timesteps[times])

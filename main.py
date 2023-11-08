@@ -156,7 +156,7 @@ def test_diff(args, model, test_loader, epoch, diffusion, device="cuda"):
     model.eval()
 
     sr = 16000
-    for audio, vertice, template, one_hot_all, file_name, emo_one_hot in test_loader:
+    for audio, vertice, template, one_hot_all, file_name in test_loader:
         vertice = vertice_path = str(vertice[0])
         vertice = np.load(vertice, allow_pickle=True)
         vertice = vertice.astype(np.float32)

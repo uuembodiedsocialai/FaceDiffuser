@@ -103,10 +103,21 @@ python predict.py --dataset multiface --vertice_dim 18516 --feature_dim 256 --ou
 
 - Run the following command to render the predicted test sequences stored in `result/`:
 
-	```
-	python render_result.py
-	```
-	The rendered videos will be saved in the `renders/videos/` folder.
+    ```
+    python render_result.py
+    ```
+    The rendered videos will be saved in the `renders/videos/` folder.
+
+### Training and Testing on BEAT
+
+- To train the model on beat and obtain test results use the following command:
+    ```
+    python .\main.py --dataset beat --train_subjects "2 4 6 8" --test_subject "2 4 6 8" --val_subjects "2 4 6 8" --vertice_dim 51 --gru_dim 256 --output_fps 30 --feature_dim 256
+    ```
+- To visualise the results open the `Blender` project from `data\beat\BeatVisualise.blend`. In the `Scripting` tab modify
+the `res_path` variable value to the `npy` sequence you want to render.
+- To add the audio, open the `Video Editor` tab and drag and drop your audio.
+- To render use the button `Render -> Render Animation` or press `CTRL + F12`
 
 ### Trained Weights
 The trained weights can be downloaded from [THIS](https://mega.nz/folder/jlBF0Dpa#U3G1lJCZ4dijMoSc9gmqSg) link. 
