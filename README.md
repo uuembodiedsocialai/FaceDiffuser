@@ -1,4 +1,4 @@
-# FaceDiffuser 
+# FaceDiffuser (MIG '23)
 Code repository for the implementation of: *FaceDiffuser: Speech-Driven Facial Animation Synthesis Using Diffusion.*
 > 
 > This GitHub repository contains PyTorch implementation of the work presented above. 
@@ -7,6 +7,8 @@ Code repository for the implementation of: *FaceDiffuser: Speech-Driven Facial A
 > inference.
 
 >We reccomend visiting the project [website](https://uuembodiedsocialai.github.io/FaceDiffuser/) and watching the supplementary video.
+
+> [Paper](https://dl.acm.org/doi/10.1145/3623264.3624447) [Project Website](https://uuembodiedsocialai.github.io/FaceDiffuser/)
 
 ## Environment
 
