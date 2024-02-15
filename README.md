@@ -139,3 +139,6 @@ We are also grateful for the publicly available datasets used during this projec
 - The authors of the BEAT dataset.
 
 Any third-party packages are owned by their respective authors and must be used under their respective licenses.
+
+## License
+This repository is released under [CC-BY-NC-4.0-International License](https://github.com/Gibberlings3/GitHub-Templates/blob/master/License-Templates/CC-BY-NC-4.0/LICENSE-CC-BY-NC-4.0.md)
